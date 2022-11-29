@@ -1,0 +1,1 @@
+# box86-64_AppImage
