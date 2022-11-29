@@ -1,0 +1,8 @@
+AppDir/
+appimage-build/
+appimage-builder-cache/
+*.deb
+*.appimage
+*.AppImage
+*.zsync
+*.msi
