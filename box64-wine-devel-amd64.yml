@@ -135,12 +135,6 @@ AppDir:
   after_bundle:
     # this is executed after the packages and files are added
     - |
-     # Patch wrapper script to use box64
-     sed -i 's|"$MAIN"|"$APPDIR/usr/local/bin/box64" "$MAIN"|' AppDir/wrapper
-
-     # Patch wrapper script to use wine64
-     sed -i 's|/wine"|/wine64"|' AppDir/wrapper
-
      WINE_VER="7.15"
      wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-amd64/wine-devel_${WINE_VER}~focal-1_amd64.deb
      wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-amd64/wine-devel-amd64_${WINE_VER}~focal-1_amd64.deb
