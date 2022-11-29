@@ -20,7 +20,7 @@ AppDir:
     id: box64
     name: box64
     icon: wine
-    version: "0.2.9_wine-devel-amd64"
+    version: !ENV ${WINE_VER}
     exec: bin/bash
     exec_args: wrapper $@
 
@@ -141,7 +141,7 @@ AppDir:
      # Patch wrapper script to use wine64
      sed -i 's|/wine"|/wine64"|' AppDir/wrapper
 
-     WINE_VER="7.2"
+     WINE_VER="7.15"
      wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-amd64/wine-devel_${WINE_VER}~focal-1_amd64.deb
      wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-amd64/wine-devel-amd64_${WINE_VER}~focal-1_amd64.deb
      dpkg -x "wine-devel_${WINE_VER}~focal-1_amd64.deb" AppDir/
@@ -213,6 +213,6 @@ AppDir:
     - /opt/wine-devel:$APPDIR/opt/wine-devel
 
 AppImage:
-  update-information: gh-releases-zsync|mmtrt|WINE_AppImage|continuous-devel-box64|box64-devel*.AppImage.zsync
+  update-information: gh-releases-zsync|mmtrt|WINE_AppImage|continuous-devel-box64|box64-*_wine*.AppImage.zsync
   #sign-key: None
   arch: aarch64
