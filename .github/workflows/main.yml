@@ -1,0 +1,136 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. 
+on:
+  # Build at 00:00 on every 12th day-of-month.
+  # schedule:
+    # - cron: "0 0 */12 * *"
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+    paths-ignore: [ '**/README.md' ]
+  pull_request:
+    branches: [ main ]
+    paths-ignore: [ '**/README.md' ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+ 
+  # This workflow contains a single job called "build-devel"
+  build-devel:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Prerequisites
+        run: |
+          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; sudo mv appimage-builder /usr/bin
+          mkdir -p /usr/share/icons/hicolor/scalable/ ; cp wine.svg /usr/share/icons/hicolor/scalable/
+          # devel
+          echo "WINE_VER=$(wget -qO- "https://github.com/ryanfortner/box64-debs/tree/master/debian" | grep -Eo box64_.* | cut -d'_' -f2 | tail -1 | sed 's|+| |;s|-| |'| sed 's/\./ -/3' | awk '{print $1 $3}')_wine-devel_7.15_amd64" >> $GITHUB_ENV
+          # Nvidia
+          # echo "NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')" >> $GITHUB_ENV
+
+      # Runs a set of commands using the runners shell
+      - name: Build appimage
+        run: |
+          # add dir dist
+          mkdir dist
+
+          # set Nvidia driver version
+          # sed -i "s|520|$NVDV|" wine-devel.yml
+
+          appimage-builder --recipe wine-devel.yml
+          mv *AppImage* dist/.
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: box64-wine-devel-continuous-aarch64.AppImage
+          path: 'dist'
+
+  # This workflow contains a single job called "build-staging"
+  build-staging:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Prerequisites
+        run: |
+          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; sudo mv appimage-builder /usr/bin
+          mkdir -p /usr/share/icons/hicolor/scalable/ ; cp wine.svg /usr/share/icons/hicolor/scalable/
+          # staging
+          echo "WINE_VER=$(wget -qO- "https://github.com/ryanfortner/box64-debs/tree/master/debian" | grep -Eo box64_.* | cut -d'_' -f2 | tail -1 | sed 's|+| |;s|-| |'| sed 's/\./ -/3' | awk '{print $1 $3}')_wine-staging_7.15_amd64" >> $GITHUB_ENV
+          # Nvidia
+          # echo "NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')" >> $GITHUB_ENV
+
+      # Runs a set of commands using the runners shell
+      - name: Build appimage
+        run: |
+          # add dir dist
+          mkdir dist
+
+          # set Nvidia driver version
+          # sed -i "s|520|$NVDV|" box64-wine-staging.yml
+
+          appimage-builder --recipe box64-wine-staging.yml
+          mv *AppImage* dist/.
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: box64-wine-staging-continuous-aarch64.AppImage
+          path: 'dist'
+
+  release-devel:
+      needs: [build-devel]
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/download-artifact@v1
+          with:
+            name: box64-wine-devel-continuous-aarch64.AppImage
+
+        - name: release
+          uses: marvinpinto/action-automatic-releases@latest
+          with:
+            title: Continuous build (devel)
+            automatic_release_tag: continuous-devel-box64
+            prerelease: false
+            draft: false
+            files: |
+              box64-wine-devel-continuous-aarch64.AppImage
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
+
+  release-staging:
+      needs: [build-staging]
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/download-artifact@v1
+          with:
+            name: box64-wine-staging-continuous-aarch64.AppImage
+
+        - name: release
+          uses: marvinpinto/action-automatic-releases@latest
+          with:
+            title: Continuous build (staging)
+            automatic_release_tag: continuous-staging-box64
+            prerelease: false
+            draft: false
+            files: |
+              box64-wine-staging-continuous-aarch64.AppImage
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
