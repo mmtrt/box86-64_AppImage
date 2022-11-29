@@ -48,7 +48,7 @@ jobs:
           # set Nvidia driver version
           # sed -i "s|520|$NVDV|" wine-devel.yml
 
-          appimage-builder --recipe wine-devel.yml
+          appimage-builder --recipe box-wine-devel-amd64.yml
           mv *AppImage* dist/.
 
       - name: Upload artifact
@@ -84,7 +84,7 @@ jobs:
           # set Nvidia driver version
           # sed -i "s|520|$NVDV|" box64-wine-staging.yml
 
-          appimage-builder --recipe box64-wine-staging.yml
+          appimage-builder --recipe box64-wine-staging-amd64.yml
           mv *AppImage* dist/.
 
       - name: Upload artifact
