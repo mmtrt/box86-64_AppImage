@@ -316,7 +316,7 @@ jobs:
       steps:
         - uses: actions/download-artifact@v1
           with:
-            name: box86-wine-stable-continuous-armhf.AppImage
+            name: box86-wine-stable-4-continuous-armhf.AppImage
 
         - name: release
           uses: marvinpinto/action-automatic-releases@latest
@@ -396,7 +396,7 @@ jobs:
       steps:
         - uses: actions/download-artifact@v1
           with:
-            name: box64-wine-stable-continuous-aarch64.AppImage
+            name: box64-wine-stable-4-continuous-aarch64.AppImage
 
         - name: release
           uses: marvinpinto/action-automatic-releases@latest
