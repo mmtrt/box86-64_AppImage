@@ -21,6 +21,78 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
 
+  # This workflow contains a single job called "build-stable-4-i386"
+  build-stable-4-i386:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Prerequisites
+        run: |
+          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; sudo mv appimage-builder /usr/bin
+          # devel
+          echo "WINE_VER=$(wget -qO- "https://github.com/ryanfortner/box86-debs/tree/master/debian" | grep -Eo box86_.* | cut -d'_' -f2 | tail -1 | sed 's|+| |;s|-| |'| sed 's/\./ -/3' | awk '{print $1 $3}')_wine-stable_$(wget -qO- https://dl.winehq.org/wine-builds/ubuntu/dists/kinetic/main/binary-i386/ | grep wine-stable | sed 's|_| |g;s|~| |g' | awk '{print $5}' | tail -n1)_i386" >> $GITHUB_ENV
+          # Nvidia
+          # echo "NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')" >> $GITHUB_ENV
+
+      # Runs a set of commands using the runners shell
+      - name: Build appimage
+        run: |
+          # add dir dist
+          mkdir dist
+
+          # set Nvidia driver version
+          # sed -i "s|520|$NVDV|" wine-stable.yml
+
+          appimage-builder --recipe box86-wine-stable-4-i386.yml
+          mv *AppImage* dist/.
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: box86-wine-stable-4-continuous-armhf.AppImage
+          path: 'dist'
+
+  # This workflow contains a single job called "build-stable-4-amd64"
+  build-stable-4-amd64:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Prerequisites
+        run: |
+          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; sudo mv appimage-builder /usr/bin
+          # devel
+          echo "WINE_VER=$(wget -qO- "https://github.com/ryanfortner/box64-debs/tree/master/debian" | grep -Eo box64_.* | cut -d'_' -f2 | tail -1 | sed 's|+| |;s|-| |'| sed 's/\./ -/3' | awk '{print $1 $3}')_wine-stable_$(wget -qO- https://dl.winehq.org/wine-builds/ubuntu/dists/kinetic/main/binary-amd64/ | grep wine-stable | sed 's|_| |g;s|~| |g' | awk '{print $5}' | tail -n1)_amd64" >> $GITHUB_ENV
+          # Nvidia
+          # echo "NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')" >> $GITHUB_ENV
+
+      # Runs a set of commands using the runners shell
+      - name: Build appimage
+        run: |
+          # add dir dist
+          mkdir dist
+
+          # set Nvidia driver version
+          # sed -i "s|520|$NVDV|" wine-stable.yml
+
+          appimage-builder --recipe box64-wine-stable-4-amd64.yml
+          mv *AppImage* dist/.
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: box64-wine-stable-4-continuous-aarch64.AppImage
+          path: 'dist'
+
   # This workflow contains a single job called "build-stable-i386"
   build-stable-i386:
     # The type of runner that the job will run on
@@ -55,6 +127,78 @@ jobs:
         uses: actions/upload-artifact@v1.0.0
         with:
           name: box86-wine-stable-continuous-armhf.AppImage
+          path: 'dist'
+
+  # This workflow contains a single job called "build-devel-i386"
+  build-devel-i386:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Prerequisites
+        run: |
+          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; sudo mv appimage-builder /usr/bin
+          # devel
+          echo "WINE_VER=$(wget -qO- "https://github.com/ryanfortner/box86-debs/tree/master/debian" | grep -Eo box86_.* | cut -d'_' -f2 | tail -1 | sed 's|+| |;s|-| |'| sed 's/\./ -/3' | awk '{print $1 $3}')_wine-devel_7.2_i386" >> $GITHUB_ENV
+          # Nvidia
+          # echo "NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')" >> $GITHUB_ENV
+
+      # Runs a set of commands using the runners shell
+      - name: Build appimage
+        run: |
+          # add dir dist
+          mkdir dist
+
+          # set Nvidia driver version
+          # sed -i "s|520|$NVDV|" wine-devel.yml
+
+          appimage-builder --recipe box86-wine-devel-i386.yml
+          mv *AppImage* dist/.
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: box86-wine-devel-continuous-armhf.AppImage
+          path: 'dist'
+
+  # This workflow contains a single job called "build-staging-i386"
+  build-staging-i386:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Prerequisites
+        run: |
+          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; sudo mv appimage-builder /usr/bin
+          # devel
+          echo "WINE_VER=$(wget -qO- "https://github.com/ryanfortner/box86-debs/tree/master/debian" | grep -Eo box86_.* | cut -d'_' -f2 | tail -1 | sed 's|+| |;s|-| |'| sed 's/\./ -/3' | awk '{print $1 $3}')_wine-staging_7.2_i386" >> $GITHUB_ENV
+          # Nvidia
+          # echo "NVDV=$(wget "https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa/+packages?field.name_filter=&field.status_filter=published&field.series_filter=kinetic" -qO- | grep -Eo drivers-.*changes | sed -r "s|_| |g;s|-| |g" | tail -n1 | awk '{print $9}')" >> $GITHUB_ENV
+
+      # Runs a set of commands using the runners shell
+      - name: Build appimage
+        run: |
+          # add dir dist
+          mkdir dist
+
+          # set Nvidia driver version
+          # sed -i "s|520|$NVDV|" wine-staging.yml
+
+          appimage-builder --recipe box86-wine-staging-i386.yml
+          mv *AppImage* dist/.
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v1.0.0
+        with:
+          name: box86-wine-staging-continuous-armhf.AppImage
           path: 'dist'
 
   # This workflow contains a single job called "build-stable"
@@ -165,6 +309,26 @@ jobs:
           name: box64-wine-staging-continuous-aarch64.AppImage
           path: 'dist'
 
+  release-stable-4-i386:
+      needs: [build-stable-4-i386]
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/download-artifact@v1
+          with:
+            name: box86-wine-stable-continuous-armhf.AppImage
+
+        - name: release
+          uses: marvinpinto/action-automatic-releases@latest
+          with:
+            title: Continuous build (stable) 4 i386
+            automatic_release_tag: continuous-stable-4-box86
+            prerelease: false
+            draft: false
+            files: |
+              box86-wine-stable-4-continuous-armhf.AppImage
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
+
   release-stable-i386:
       needs: [build-stable-i386]
       runs-on: ubuntu-latest
@@ -177,13 +341,73 @@ jobs:
         - name: release
           uses: marvinpinto/action-automatic-releases@latest
           with:
-            title: Continuous build (stable)
+            title: Continuous build (stable) i386
             automatic_release_tag: continuous-stable-box86
             prerelease: false
             draft: false
             files: |
               box86-wine-stable-continuous-armhf.AppImage
-            repo_token: ${{ secrets.GITHUB_TOKEN }}          
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
+
+  release-devel-i386:
+      needs: [build-devel-i386]
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/download-artifact@v1
+          with:
+            name: box86-wine-devel-continuous-armhf.AppImage
+
+        - name: release
+          uses: marvinpinto/action-automatic-releases@latest
+          with:
+            title: Continuous build (devel) i386
+            automatic_release_tag: continuous-devel-box86
+            prerelease: false
+            draft: false
+            files: |
+              box86-wine-devel-continuous-armhf.AppImage
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
+
+  release-staging-i386:
+      needs: [build-staging-i386]
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/download-artifact@v1
+          with:
+            name: box86-wine-staging-continuous-armhf.AppImage
+
+        - name: release
+          uses: marvinpinto/action-automatic-releases@latest
+          with:
+            title: Continuous build (staging) i386
+            automatic_release_tag: continuous-staging-box86
+            prerelease: false
+            draft: false
+            files: |
+              box86-wine-staging-continuous-armhf.AppImage
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
+
+  release-stable-4-amd64:
+      needs: [build-stable-4-amd64]
+      runs-on: ubuntu-latest
+
+      steps:
+        - uses: actions/download-artifact@v1
+          with:
+            name: box64-wine-stable-continuous-aarch64.AppImage
+
+        - name: release
+          uses: marvinpinto/action-automatic-releases@latest
+          with:
+            title: Continuous build (stable) 4 amd64
+            automatic_release_tag: continuous-stable-4-box64
+            prerelease: false
+            draft: false
+            files: |
+              box64-wine-stable-4-continuous-aarch64.AppImage
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   release-stable:
       needs: [build-stable]
@@ -197,7 +421,7 @@ jobs:
         - name: release
           uses: marvinpinto/action-automatic-releases@latest
           with:
-            title: Continuous build (stable)
+            title: Continuous build (stable) amd64
             automatic_release_tag: continuous-stable-box64
             prerelease: false
             draft: false
@@ -217,7 +441,7 @@ jobs:
         - name: release
           uses: marvinpinto/action-automatic-releases@latest
           with:
-            title: Continuous build (devel)
+            title: Continuous build (devel) amd64
             automatic_release_tag: continuous-devel-box64
             prerelease: false
             draft: false
@@ -237,7 +461,7 @@ jobs:
         - name: release
           uses: marvinpinto/action-automatic-releases@latest
           with:
-            title: Continuous build (staging)
+            title: Continuous build (staging) amd64
             automatic_release_tag: continuous-staging-box64
             prerelease: false
             draft: false
