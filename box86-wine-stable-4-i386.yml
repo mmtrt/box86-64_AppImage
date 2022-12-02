@@ -47,6 +47,13 @@ AppDir:
       - unionfs-fuse
       - vulkan-tools
       - libmspack0
+      - libxinerama1
+      - libxrender1
+      - libxcomposite1
+      - libxi6
+      - libxcursor1
+      - libcups2
+      - libmpg123-0
       - libdrm2
       # - libdrm-intel1
       - libdrm-nouveau2
