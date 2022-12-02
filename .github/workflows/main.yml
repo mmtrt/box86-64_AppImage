@@ -55,7 +55,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
         with:
-          name: box86-wine-stable-4-continuous-armhf.AppImage
+          name: box86-wine-stable-4-continuous-aarch64.AppImage
           path: 'dist'
 
   # This workflow contains a single job called "build-stable-4-amd64"
@@ -129,7 +129,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
         with:
-          name: box86-wine-stable-continuous-armhf.AppImage
+          name: box86-wine-stable-continuous-aarch64.AppImage
           path: 'dist'
 
   # This workflow contains a single job called "build-devel-i386"
@@ -166,7 +166,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
         with:
-          name: box86-wine-devel-continuous-armhf.AppImage
+          name: box86-wine-devel-continuous-aarch64.AppImage
           path: 'dist'
 
   # This workflow contains a single job called "build-staging-i386"
@@ -203,7 +203,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v1.0.0
         with:
-          name: box86-wine-staging-continuous-armhf.AppImage
+          name: box86-wine-staging-continuous-aarch64.AppImage
           path: 'dist'
 
   # This workflow contains a single job called "build-stable"
@@ -324,7 +324,7 @@ jobs:
       steps:
         - uses: actions/download-artifact@v1
           with:
-            name: box86-wine-stable-4-continuous-armhf.AppImage
+            name: box86-wine-stable-4-continuous-aarch64.AppImage
 
         - name: release
           uses: marvinpinto/action-automatic-releases@latest
@@ -334,7 +334,7 @@ jobs:
             prerelease: false
             draft: false
             files: |
-              box86-wine-stable-4-continuous-armhf.AppImage
+              box86-wine-stable-4-continuous-aarch64.AppImage
             repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   release-stable-i386:
@@ -344,7 +344,7 @@ jobs:
       steps:
         - uses: actions/download-artifact@v1
           with:
-            name: box86-wine-stable-continuous-armhf.AppImage
+            name: box86-wine-stable-continuous-aarch64.AppImage
 
         - name: release
           uses: marvinpinto/action-automatic-releases@latest
@@ -354,7 +354,7 @@ jobs:
             prerelease: false
             draft: false
             files: |
-              box86-wine-stable-continuous-armhf.AppImage
+              box86-wine-stable-continuous-aarch64.AppImage
             repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   release-devel-i386:
@@ -364,7 +364,7 @@ jobs:
       steps:
         - uses: actions/download-artifact@v1
           with:
-            name: box86-wine-devel-continuous-armhf.AppImage
+            name: box86-wine-devel-continuous-aarch64.AppImage
 
         - name: release
           uses: marvinpinto/action-automatic-releases@latest
@@ -374,7 +374,7 @@ jobs:
             prerelease: false
             draft: false
             files: |
-              box86-wine-devel-continuous-armhf.AppImage
+              box86-wine-devel-continuous-aarch64.AppImage
             repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   release-staging-i386:
@@ -384,7 +384,7 @@ jobs:
       steps:
         - uses: actions/download-artifact@v1
           with:
-            name: box86-wine-staging-continuous-armhf.AppImage
+            name: box86-wine-staging-continuous-aarch64.AppImage
 
         - name: release
           uses: marvinpinto/action-automatic-releases@latest
@@ -394,7 +394,7 @@ jobs:
             prerelease: false
             draft: false
             files: |
-              box86-wine-staging-continuous-armhf.AppImage
+              box86-wine-staging-continuous-aarch64.AppImage
             repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   release-stable-4-amd64:

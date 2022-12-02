@@ -25,7 +25,7 @@ AppDir:
     exec_args: wrapper $@
 
   apt:
-    arch: [armhf]
+    arch: [arm64,armhf]
     sources:
       - sourceline: 'deb http://ports.ubuntu.com/ubuntu-ports/ lunar main restricted universe multiverse'
       - sourceline: 'deb http://ports.ubuntu.com/ubuntu-ports/ lunar-updates main restricted universe multiverse'
@@ -47,41 +47,43 @@ AppDir:
       - unionfs-fuse
       - vulkan-tools
       - libmspack0
-      - libxinerama1
-      - libxrender1
-      - libxcomposite1
-      - libxi6
-      - libxcursor1
-      - libcups2
-      - libdrm2
-      # - libdrm-intel1
-      - libdrm-nouveau2
-      - libdrm-amdgpu1
-      - libdrm-radeon1
-      - libegl-mesa0
-      - libegl1
-      - libgbm1
-      - libgl1
-      - libgl1-mesa-dri
-      - libglapi-mesa
-      - libgles2
-      - libglvnd0
-      - libglx0
-      - libglx-mesa0
-      - mesa-vdpau-drivers
-      - mesa-va-drivers
-      - mesa-vulkan-drivers
-      - libx11-6
-      - libx11-xcb1
-      - libxcb-dri2-0
-      - libxcb-dri3-0
-      - libxcb-glx0
-      - libxcb-present0
-      - libxcb-render0
-      - libxcb-shape0
-      - libxcb-shm0
-      - libxcb-xfixes0
-      - libxcb1
+      - libxinerama1:armhf
+      - libxrender1:armhf
+      - libxrandr2:armhf
+      - libxcomposite1:armhf
+      - libxi6:armhf
+      - libxcursor1:armhf
+      - libcups2:armhf
+      - libmpg123-0:armhf
+      - libdrm2:armhf
+      # - libdrm-intel1:armhf
+      - libdrm-nouveau2:armhf
+      - libdrm-amdgpu1:armhf
+      - libdrm-radeon1:armhf
+      - libegl-mesa0:armhf
+      - libegl1:armhf
+      - libgbm1:armhf
+      - libgl1:armhf
+      - libgl1-mesa-dri:armhf
+      - libglapi-mesa:armhf
+      - libgles2:armhf
+      - libglvnd0:armhf
+      - libglx0:armhf
+      - libglx-mesa0:armhf
+      - mesa-vdpau-drivers:armhf
+      - mesa-va-drivers:armhf
+      - mesa-vulkan-drivers:armhf
+      - libx11-6:armhf
+      - libx11-xcb1:armhf
+      - libxcb-dri2-0:armhf
+      - libxcb-dri3-0:armhf
+      - libxcb-glx0:armhf
+      - libxcb-present0:armhf
+      - libxcb-render0:armhf
+      - libxcb-shape0:armhf
+      - libxcb-shm0:armhf
+      - libxcb-xfixes0:armhf
+      - libxcb1:armhf
 
   files:
     exclude:
@@ -223,4 +225,4 @@ AppDir:
 AppImage:
   update-information: gh-releases-zsync|mmtrt|box86-64_AppImage|continuous-devel-box86|box86-*_wine*.AppImage.zsync
   #sign-key: None
-  arch: armhf
+  arch: aarch64
