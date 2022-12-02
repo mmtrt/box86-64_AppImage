@@ -132,6 +132,7 @@ AppDir:
       - usr/share/pkgconfig
       - usr/share/polkit-1
       - usr/share/snmp
+      - usr/share/wine
       - usr/share/zoneinfo
       - usr/share/zoneinfo-icu
       - usr/share/zsh
