@@ -35,6 +35,8 @@ AppDir:
         key_url: 'https://ryanfortner.github.io/box86-debs/KEY.gpg'
 
     include:
+      - wine32
+      - wine32-preloader
       - bash
       - box86
       - cabextract
@@ -95,9 +97,11 @@ AppDir:
       - lib/modprobe.d
       - lib/systemd
       - lib/udev
+      - usr/lib/arm-linux-gnueabihf/wine
       - usr/lib/mime
       - usr/lib/sasl2
       - usr/lib/tmpfiles.d
+      - usr/lib/wine
       - usr/sbin
       - usr/share/apps
       - usr/share/man
@@ -128,6 +132,7 @@ AppDir:
       - usr/share/pkgconfig
       - usr/share/polkit-1
       - usr/share/snmp
+      - usr/share/wine
       - usr/share/zoneinfo
       - usr/share/zoneinfo-icu
       - usr/share/zsh
