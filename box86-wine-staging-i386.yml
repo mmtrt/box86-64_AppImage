@@ -210,6 +210,6 @@ AppDir:
     - /opt/wine-staging:$APPDIR/opt/wine-staging
 
 AppImage:
-  update-information: gh-releases-zsync|mmtrt|WINE_AppImage|continuous-staging-box86|box86-*_wine*.AppImage.zsync
+  update-information: gh-releases-zsync|mmtrt|box86-64_AppImage|continuous-staging-box86|box86-*_wine*.AppImage.zsync
   #sign-key: None
   arch: armhf
