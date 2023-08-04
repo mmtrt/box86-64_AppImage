@@ -38,7 +38,7 @@ AppDir:
       - wine64
       - wine64-preloader
       - bash
-      - box64
+      - box64-arm64
       - cabextract
       - dash
       - perl
