@@ -34,7 +34,7 @@ jobs:
       - name: Prerequisites
         run: |
           sudo apt update && sudo apt install libfuse2 -y
-          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; sudo mv appimage-builder /usr/bin
+          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; ./appimage-builder --appimage-extract &>/dev/null
           # devel
           echo "WINE_VER=$(wget -qO- "https://github.com/ryanfortner/box86-debs/tree/master/debian" | grep -Eo arm_.* | cut -d'_' -f2 | tail -1 | sed 's|+| |;s|-| |'| sed 's/\./ -/3' | awk '{print $1 $3}')_wine-stable_4.0.4_i386" >> $GITHUB_ENV
           # Nvidia
@@ -43,13 +43,23 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Build appimage
         run: |
+          # add custom mksquashfs
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
+
+          # Add static appimage runtime
+          mkdir -p appimage-build/prime
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-aarch64" -O appimage-build/prime/runtime-aarch64
+
+          # force zstd format in appimagebuilder for appimages
+          rm appimage-builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
+
           # add dir dist
           mkdir dist
 
           # set Nvidia driver version
           # sed -i "s|520|$NVDV|" wine-stable.yml
 
-          appimage-builder --recipe box86-wine-stable-4-i386.yml
+          squashfs-root/AppRun --recipe box86-wine-stable-4-i386.yml
           mv *AppImage* dist/.
 
       - name: Upload artifact
@@ -71,7 +81,7 @@ jobs:
       - name: Prerequisites
         run: |
           sudo apt update && sudo apt install libfuse2 -y
-          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; sudo mv appimage-builder /usr/bin
+          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; ./appimage-builder --appimage-extract &>/dev/null
           # devel
           echo "WINE_VER=$(wget -qO- "https://github.com/ryanfortner/box64-debs/tree/master/debian" | grep -Eo arm64_.* | cut -d'_' -f2 | tail -1 | sed 's|+| |;s|-| |'| sed 's/\./ -/3' | awk '{print $1 $3}')_wine-stable_4.0.4_amd64" >> $GITHUB_ENV
           # Nvidia
@@ -80,13 +90,23 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Build appimage
         run: |
+          # add custom mksquashfs
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
+
+          # Add static appimage runtime
+          mkdir -p appimage-build/prime
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-aarch64" -O appimage-build/prime/runtime-aarch64
+
+          # force zstd format in appimagebuilder for appimages
+          rm appimage-builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
+
           # add dir dist
           mkdir dist
 
           # set Nvidia driver version
           # sed -i "s|520|$NVDV|" wine-stable.yml
 
-          appimage-builder --recipe box64-wine-stable-4-amd64.yml
+          squashfs-root/AppRun --recipe box64-wine-stable-4-amd64.yml
           mv *AppImage* dist/.
 
       - name: Upload artifact
@@ -108,7 +128,7 @@ jobs:
       - name: Prerequisites
         run: |
           sudo apt update && sudo apt install libfuse2 -y
-          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; sudo mv appimage-builder /usr/bin
+          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; ./appimage-builder --appimage-extract &>/dev/null
           # devel
           echo "WINE_VER=$(wget -qO- "https://github.com/ryanfortner/box86-debs/tree/master/debian" | grep -Eo arm_.* | cut -d'_' -f2 | tail -1 | sed 's|+| |;s|-| |'| sed 's/\./ -/3' | awk '{print $1 $3}')_wine-stable_$(wget -qO- https://dl.winehq.org/wine-builds/ubuntu/dists/kinetic/main/binary-i386/ | grep wine-stable | sed 's|_| |g;s|~| |g' | awk '{print $5}' | tail -n1)_i386" >> $GITHUB_ENV
           # Nvidia
@@ -117,13 +137,23 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Build appimage
         run: |
+          # add custom mksquashfs
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
+
+          # Add static appimage runtime
+          mkdir -p appimage-build/prime
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-aarch64" -O appimage-build/prime/runtime-aarch64
+
+          # force zstd format in appimagebuilder for appimages
+          rm appimage-builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
+
           # add dir dist
           mkdir dist
 
           # set Nvidia driver version
           # sed -i "s|520|$NVDV|" wine-stable.yml
 
-          appimage-builder --recipe box86-wine-stable-i386.yml
+          squashfs-root/AppRun --recipe box86-wine-stable-i386.yml
           mv *AppImage* dist/.
 
       - name: Upload artifact
@@ -145,7 +175,7 @@ jobs:
       - name: Prerequisites
         run: |
           sudo apt update && sudo apt install libfuse2 -y
-          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; sudo mv appimage-builder /usr/bin
+          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; ./appimage-builder --appimage-extract &>/dev/null
           # devel
           echo "WINE_VER=$(wget -qO- "https://github.com/ryanfortner/box86-debs/tree/master/debian" | grep -Eo arm_.* | cut -d'_' -f2 | tail -1 | sed 's|+| |;s|-| |'| sed 's/\./ -/3' | awk '{print $1 $3}')_wine-devel_7.2_i386" >> $GITHUB_ENV
           # Nvidia
@@ -154,13 +184,23 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Build appimage
         run: |
+          # add custom mksquashfs
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
+
+          # Add static appimage runtime
+          mkdir -p appimage-build/prime
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-aarch64" -O appimage-build/prime/runtime-aarch64
+
+          # force zstd format in appimagebuilder for appimages
+          rm appimage-builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
+
           # add dir dist
           mkdir dist
 
           # set Nvidia driver version
           # sed -i "s|520|$NVDV|" wine-devel.yml
 
-          appimage-builder --recipe box86-wine-devel-i386.yml
+          squashfs-root/AppRun --recipe box86-wine-devel-i386.yml
           mv *AppImage* dist/.
 
       - name: Upload artifact
@@ -182,7 +222,7 @@ jobs:
       - name: Prerequisites
         run: |
           sudo apt update && sudo apt install libfuse2 -y
-          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; sudo mv appimage-builder /usr/bin
+          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; ./appimage-builder --appimage-extract &>/dev/null
           # devel
           echo "WINE_VER=$(wget -qO- "https://github.com/ryanfortner/box86-debs/tree/master/debian" | grep -Eo arm_.* | cut -d'_' -f2 | tail -1 | sed 's|+| |;s|-| |'| sed 's/\./ -/3' | awk '{print $1 $3}')_wine-staging_7.2_i386" >> $GITHUB_ENV
           # Nvidia
@@ -191,13 +231,23 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Build appimage
         run: |
+          # add custom mksquashfs
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
+
+          # Add static appimage runtime
+          mkdir -p appimage-build/prime
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-aarch64" -O appimage-build/prime/runtime-aarch64
+
+          # force zstd format in appimagebuilder for appimages
+          rm appimage-builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
+
           # add dir dist
           mkdir dist
 
           # set Nvidia driver version
           # sed -i "s|520|$NVDV|" wine-staging.yml
 
-          appimage-builder --recipe box86-wine-staging-i386.yml
+          squashfs-root/AppRun --recipe box86-wine-staging-i386.yml
           mv *AppImage* dist/.
 
       - name: Upload artifact
@@ -219,7 +269,7 @@ jobs:
       - name: Prerequisites
         run: |
           sudo apt update && sudo apt install libfuse2 -y
-          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; sudo mv appimage-builder /usr/bin
+          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; ./appimage-builder --appimage-extract &>/dev/null
           # devel
           echo "WINE_VER=$(wget -qO- "https://github.com/ryanfortner/box64-debs/tree/master/debian" | grep -Eo arm64_.* | cut -d'_' -f2 | tail -1 | sed 's|+| |;s|-| |'| sed 's/\./ -/3' | awk '{print $1 $3}')_wine-stable_$(wget -qO- https://dl.winehq.org/wine-builds/ubuntu/dists/kinetic/main/binary-amd64/ | grep wine-stable | sed 's|_| |g;s|~| |g' | awk '{print $5}' | tail -n1)_amd64" >> $GITHUB_ENV
           # Nvidia
@@ -228,13 +278,23 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Build appimage
         run: |
+          # add custom mksquashfs
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
+
+          # Add static appimage runtime
+          mkdir -p appimage-build/prime
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-aarch64" -O appimage-build/prime/runtime-aarch64
+
+          # force zstd format in appimagebuilder for appimages
+          rm appimage-builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
+
           # add dir dist
           mkdir dist
 
           # set Nvidia driver version
           # sed -i "s|520|$NVDV|" wine-stable.yml
 
-          appimage-builder --recipe box64-wine-stable-amd64.yml
+          squashfs-root/AppRun --recipe box64-wine-stable-amd64.yml
           mv *AppImage* dist/.
 
       - name: Upload artifact
@@ -256,7 +316,7 @@ jobs:
       - name: Prerequisites
         run: |
           sudo apt update && sudo apt install libfuse2 -y
-          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; sudo mv appimage-builder /usr/bin
+          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; ./appimage-builder --appimage-extract &>/dev/null
           # devel
           echo "WINE_VER=$(wget -qO- "https://github.com/ryanfortner/box64-debs/tree/master/debian" | grep -Eo arm64_.* | cut -d'_' -f2 | tail -1 | sed 's|+| |;s|-| |'| sed 's/\./ -/3' | awk '{print $1 $3}')_wine-devel_7.2_amd64" >> $GITHUB_ENV
           # Nvidia
@@ -265,13 +325,23 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Build appimage
         run: |
+          # add custom mksquashfs
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
+
+          # Add static appimage runtime
+          mkdir -p appimage-build/prime
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-aarch64" -O appimage-build/prime/runtime-aarch64
+
+          # force zstd format in appimagebuilder for appimages
+          rm appimage-builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
+
           # add dir dist
           mkdir dist
 
           # set Nvidia driver version
           # sed -i "s|520|$NVDV|" wine-devel.yml
 
-          appimage-builder --recipe box64-wine-devel-amd64.yml
+          squashfs-root/AppRun --recipe box64-wine-devel-amd64.yml
           mv *AppImage* dist/.
 
       - name: Upload artifact
@@ -293,7 +363,7 @@ jobs:
       - name: Prerequisites
         run: |
           sudo apt update && sudo apt install libfuse2 -y
-          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; sudo mv appimage-builder /usr/bin
+          wget -q "https://github.com/AppImageCrafters/appimage-builder/releases/download/v1.0.3/appimage-builder-1.0.3-x86_64.AppImage" -O appimage-builder ; chmod +x appimage-builder ; ./appimage-builder --appimage-extract &>/dev/null
           # staging
           echo "WINE_VER=$(wget -qO- "https://github.com/ryanfortner/box64-debs/tree/master/debian" | grep -Eo arm64_.* | cut -d'_' -f2 | tail -1 | sed 's|+| |;s|-| |'| sed 's/\./ -/3' | awk '{print $1 $3}')_wine-staging_7.2_amd64" >> $GITHUB_ENV
           # Nvidia
@@ -302,13 +372,23 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Build appimage
         run: |
+          # add custom mksquashfs
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/mksquashfs" -O squashfs-root/usr/bin/mksquashfs
+
+          # Add static appimage runtime
+          mkdir -p appimage-build/prime
+          wget -q "https://github.com/mmtrt/WINE_AppImage/raw/master/runtime/runtime-aarch64" -O appimage-build/prime/runtime-aarch64
+
+          # force zstd format in appimagebuilder for appimages
+          rm appimage-builder ; sed -i 's|xz|zstd|' squashfs-root/usr/lib/python3.8/site-packages/appimagebuilder/modules/prime/appimage_primer.py
+
           # add dir dist
           mkdir dist
 
           # set Nvidia driver version
           # sed -i "s|520|$NVDV|" box64-wine-staging.yml
 
-          appimage-builder --recipe box64-wine-staging-amd64.yml
+          squashfs-root/AppRun --recipe box64-wine-staging-amd64.yml
           mv *AppImage* dist/.
 
       - name: Upload artifact
