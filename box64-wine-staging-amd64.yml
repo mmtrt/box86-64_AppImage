@@ -141,7 +141,7 @@ AppDir:
   after_bundle:
     # this is executed after the packages and files are added
     - |
-     WINE_VER="7.2"
+     WINE_VER="8.21"
      wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-amd64/wine-staging_${WINE_VER}~focal-1_amd64.deb
      wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-amd64/wine-staging-amd64_${WINE_VER}~focal-1_amd64.deb
      dpkg -x "wine-staging_${WINE_VER}~focal-1_amd64.deb" AppDir/

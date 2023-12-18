@@ -151,7 +151,7 @@ AppDir:
      # Patch wrapper script to use wine box86
      sed -i 's|/wine64"|/wine"|;s|/box64"|/box86"|g' AppDir/wrapper
 
-     WINE_VER="7.2"
+     WINE_VER="8.21"
      wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-i386/wine-devel_${WINE_VER}~focal-1_i386.deb
      wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-i386/wine-devel-i386_${WINE_VER}~focal-1_i386.deb
      dpkg -x "wine-devel_${WINE_VER}~focal-1_i386.deb" AppDir/

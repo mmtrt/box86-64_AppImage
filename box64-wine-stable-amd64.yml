@@ -141,7 +141,7 @@ AppDir:
   after_bundle:
     # this is executed after the packages and files are added
     - |
-     WINE_VER="$(wget -qO- https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-amd64/ | grep wine-stable | sed 's|_| |g;s|~| |g' | awk '{print $5}' | tail -n1)"
+     WINE_VER="8.0.1"
      wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-amd64/wine-stable_${WINE_VER}~focal-1_amd64.deb
      wget -q -c https://dl.winehq.org/wine-builds/ubuntu/dists/focal/main/binary-amd64/wine-stable-amd64_${WINE_VER}~focal-1_amd64.deb
      dpkg -x "wine-stable_${WINE_VER}~focal-1_amd64.deb" AppDir/
